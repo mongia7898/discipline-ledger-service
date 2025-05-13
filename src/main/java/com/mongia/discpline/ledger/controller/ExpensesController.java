@@ -1,9 +1,11 @@
 package com.mongia.discpline.ledger.controller;
 
+import com.mongia.discpline.ledger.CommonUtils.Response.LedgerResponse;
 import com.mongia.discpline.ledger.DTOs.ExpenseRequest;
 import com.mongia.discpline.ledger.DTOs.ExpenseResponse;
 import com.mongia.discpline.ledger.services.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,23 +23,25 @@ public class ExpensesController {
     }
 
     @GetMapping
-    List<ExpenseResponse> getAllExpenses(){
-        return expenseService.getAllExpenses();
+    public ResponseEntity<LedgerResponse<List<ExpenseResponse>>> getAllExpenses(){
+        List<ExpenseResponse> allExpenses = expenseService.getAllExpenses();
+        return ResponseEntity.ok(new LedgerResponse<List<ExpenseResponse>>(Boolean.TRUE,"Fetched all expenses",allExpenses));
     }
 
     @GetMapping("/{id}")
-    ExpenseResponse getExpenseById(@PathVariable Integer id){
-        return expenseService.getExpenseById(id);
+    public ResponseEntity<?> getExpenseById(@PathVariable Integer id){
+        ExpenseResponse expenseById = expenseService.getExpenseById(id);
+        return ResponseEntity.ok(new LedgerResponse<ExpenseResponse>(Boolean.TRUE,"Get by id",expenseById));
     }
 
     @DeleteMapping("/{id}")
-    public String deleteExpense(@PathVariable Integer id){
+    public ResponseEntity<?> deleteExpense(@PathVariable Integer id){
         expenseService.deleteExpense(id);
-        return "Expense deleted successfully";
+        return ResponseEntity.ok( new LedgerResponse<String>(Boolean.TRUE,"Deleted successfully"));
     }
 
     @PutMapping("/{id}")
-    public ExpenseResponse updateExpense(@PathVariable Integer id,@RequestBody ExpenseRequest expenseRequest){
-        return expenseService.editExpense(id,expenseRequest);
+    public ResponseEntity<?> updateExpense(@PathVariable Integer id,@RequestBody ExpenseRequest expenseRequest){
+        return ResponseEntity.ok(new LedgerResponse<ExpenseResponse>(Boolean.TRUE,"Get by id",expenseService.editExpense(id,expenseRequest)));
     }
 }
