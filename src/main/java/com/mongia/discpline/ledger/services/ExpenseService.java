@@ -4,6 +4,7 @@ import com.mongia.discpline.ledger.DTOs.ExpenseRequest;
 import com.mongia.discpline.ledger.DTOs.ExpenseResponse;
 import com.mongia.discpline.ledger.Entity.Expenses;
 import com.mongia.discpline.ledger.Repository.ExpenseRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class ExpenseService {
 
-    @Autowired
-    public  ExpenseRepository expenseRepository;
+
+    private final  ExpenseRepository expenseRepository;
 
      public ExpenseResponse createExpense(ExpenseRequest expenseRequest){
         Expenses expenses=Expenses.builder().amount(expenseRequest.getAmount())

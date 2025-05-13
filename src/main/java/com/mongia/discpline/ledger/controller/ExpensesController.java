@@ -4,7 +4,7 @@ import com.mongia.discpline.ledger.CommonUtils.Response.LedgerResponse;
 import com.mongia.discpline.ledger.DTOs.ExpenseRequest;
 import com.mongia.discpline.ledger.DTOs.ExpenseResponse;
 import com.mongia.discpline.ledger.services.ExpenseService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +12,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/expenses")
+@RequiredArgsConstructor
 public class ExpensesController {
 
-    @Autowired
-    public  ExpenseService expenseService;
+
+    private final  ExpenseService expenseService;
 
     @PostMapping
      ExpenseResponse addExpense(@RequestBody ExpenseRequest expenseRequest){
