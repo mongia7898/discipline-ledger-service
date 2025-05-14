@@ -1,10 +1,12 @@
 package com.mongia.discpline.ledger.controller;
 
 import com.mongia.discpline.ledger.CommonUtils.Response.LedgerResponse;
+import com.mongia.discpline.ledger.CommonUtils.ResponseMessages;
 import com.mongia.discpline.ledger.DTOs.ExpenseRequest;
 import com.mongia.discpline.ledger.DTOs.ExpenseResponse;
 import com.mongia.discpline.ledger.services.ExpenseService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,36 +14,37 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/expenses")
-public class ExpensesController {
+@RequiredArgsConstructor
+public class ExpensesController extends ResponseMessages {
 
-    @Autowired
-    public  ExpenseService expenseService;
+
+    private final  ExpenseService expenseService;
 
     @PostMapping
-     ExpenseResponse addExpense(@RequestBody ExpenseRequest expenseRequest){
+     ExpenseResponse addExpense(@Valid @RequestBody  ExpenseRequest expenseRequest){
         return expenseService.createExpense(expenseRequest);
     }
 
     @GetMapping
     public ResponseEntity<LedgerResponse<List<ExpenseResponse>>> getAllExpenses(){
         List<ExpenseResponse> allExpenses = expenseService.getAllExpenses();
-        return ResponseEntity.ok(new LedgerResponse<List<ExpenseResponse>>(Boolean.TRUE,"Fetched all expenses",allExpenses));
+        return ResponseEntity.ok(new LedgerResponse<List<ExpenseResponse>>(Boolean.TRUE,EXPENSE_CREATED,allExpenses));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getExpenseById(@PathVariable Integer id){
         ExpenseResponse expenseById = expenseService.getExpenseById(id);
-        return ResponseEntity.ok(new LedgerResponse<ExpenseResponse>(Boolean.TRUE,"Get by id",expenseById));
+        return ResponseEntity.ok(new LedgerResponse<ExpenseResponse>(Boolean.TRUE,EXPENSE_FETCHED,expenseById));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteExpense(@PathVariable Integer id){
         expenseService.deleteExpense(id);
-        return ResponseEntity.ok( new LedgerResponse<String>(Boolean.TRUE,"Deleted successfully"));
+        return ResponseEntity.ok( new LedgerResponse<String>(Boolean.TRUE,EXPENSE_DELETED));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateExpense(@PathVariable Integer id,@RequestBody ExpenseRequest expenseRequest){
-        return ResponseEntity.ok(new LedgerResponse<ExpenseResponse>(Boolean.TRUE,"Get by id",expenseService.editExpense(id,expenseRequest)));
+    public ResponseEntity<?> updateExpense(@PathVariable Integer id,@Valid @RequestBody  ExpenseRequest expenseRequest){
+        return ResponseEntity.ok(new LedgerResponse<ExpenseResponse>(Boolean.TRUE,EXPENSE_UDPATED,expenseService.editExpense(id,expenseRequest)));
     }
 }
