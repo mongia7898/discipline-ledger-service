@@ -2,8 +2,11 @@ package com.mongia.discpline.ledger.controller;
 
 import com.mongia.discpline.ledger.CommonUtils.Response.LedgerResponse;
 import com.mongia.discpline.ledger.CommonUtils.ResponseMessages;
-import com.mongia.discpline.ledger.DTOs.ExpenseRequest;
-import com.mongia.discpline.ledger.DTOs.ExpenseResponse;
+import com.mongia.discpline.ledger.DTOs.requests.ExpenseRequest;
+import com.mongia.discpline.ledger.DTOs.requests.ExpenseSearchRequest;
+import com.mongia.discpline.ledger.DTOs.requests.PageableRequest;
+import com.mongia.discpline.ledger.DTOs.responses.ExpenseListResponse;
+import com.mongia.discpline.ledger.DTOs.responses.ExpenseResponse;
 import com.mongia.discpline.ledger.services.ExpenseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +28,10 @@ public class ExpensesController extends ResponseMessages {
         return expenseService.createExpense(expenseRequest);
     }
 
-    @GetMapping
-    public ResponseEntity<LedgerResponse<List<ExpenseResponse>>> getAllExpenses(){
-        List<ExpenseResponse> allExpenses = expenseService.getAllExpenses();
-        return ResponseEntity.ok(new LedgerResponse<List<ExpenseResponse>>(Boolean.TRUE,EXPENSE_CREATED,allExpenses));
+    @PostMapping("/all")
+    public ResponseEntity<LedgerResponse<?>> getAllExpenses(@RequestBody PageableRequest pageableRequest){
+        ExpenseListResponse allExpenses = expenseService.getAllExpenses(pageableRequest);
+        return ResponseEntity.ok(new LedgerResponse<ExpenseListResponse>(Boolean.TRUE,EXPENSE_CREATED,allExpenses));
     }
 
     @GetMapping("/{id}")
@@ -46,5 +49,11 @@ public class ExpensesController extends ResponseMessages {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateExpense(@PathVariable Integer id,@Valid @RequestBody  ExpenseRequest expenseRequest){
         return ResponseEntity.ok(new LedgerResponse<ExpenseResponse>(Boolean.TRUE,EXPENSE_UDPATED,expenseService.editExpense(id,expenseRequest)));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchExpenses(@RequestBody ExpenseSearchRequest expenseSearch){
+        return ResponseEntity.ok(new LedgerResponse<ExpenseListResponse>(Boolean.TRUE,EXPENSE_UDPATED,expenseService.searchExpense(expenseSearch)));
+
     }
 }

@@ -1,4 +1,4 @@
-package com.mongia.discpline.ledger.DTOs;
+package com.mongia.discpline.ledger.DTOs.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

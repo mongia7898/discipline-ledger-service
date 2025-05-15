@@ -1,11 +1,16 @@
 package com.mongia.discpline.ledger.services;
 
-import com.mongia.discpline.ledger.DTOs.ExpenseRequest;
-import com.mongia.discpline.ledger.DTOs.ExpenseResponse;
+import com.mongia.discpline.ledger.DTOs.requests.ExpenseRequest;
+import com.mongia.discpline.ledger.DTOs.requests.ExpenseSearchRequest;
+import com.mongia.discpline.ledger.DTOs.requests.PageableRequest;
+import com.mongia.discpline.ledger.DTOs.responses.ExpenseListResponse;
+import com.mongia.discpline.ledger.DTOs.responses.ExpenseResponse;
 import com.mongia.discpline.ledger.Entity.Expenses;
 import com.mongia.discpline.ledger.Repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -47,11 +52,27 @@ public class ExpenseService {
         Optional<Expenses> expense = expenseRepository.findById(id);
         return expense.map(ExpenseService::convertEntityToResponse).orElse(null);
     }
-    public List<ExpenseResponse> getAllExpenses(){
-         List<Expenses> allExpenses=expenseRepository.findAll();
-         List<ExpenseResponse> list=new ArrayList<>();
-         allExpenses.forEach(expense-> list.add(convertEntityToResponse(expense)));
-         return list;
+    public ExpenseListResponse getAllExpenses(PageableRequest pageableRequest){
+
+        PageRequest pageRequest= PageRequest.of(pageableRequest.getPageNo(),pageableRequest.getSize());
+         Page<Expenses> allExpenses=expenseRepository.findAll(pageRequest);
+//         Long totalAmount=
+
+         return convertPageableToList(allExpenses);
+    }
+
+    private ExpenseListResponse convertPageableToList(Page<Expenses> page){
+        List<ExpenseResponse> list=new ArrayList<>();
+
+        page.getContent().forEach(expense-> list.add(convertEntityToResponse(expense)));
+
+        ExpenseListResponse expenseListResponse=new ExpenseListResponse();
+        expenseListResponse.setExpenseResponses(list);
+//        expenseListResponse.setTotalAmount();
+        expenseListResponse.setCurrentPage(page.getNumber());
+        expenseListResponse.setTotalPages(page.getTotalPages());
+        expenseListResponse.setTotalElements(page.getTotalElements());
+        return expenseListResponse;
     }
 
 
@@ -69,5 +90,9 @@ public class ExpenseService {
             return convertEntityToResponse(expenseRepository.save(expenses));
         }
         else return null;
+    }
+
+    public ExpenseListResponse searchExpense(ExpenseSearchRequest expenseSearchRequest){
+         return null;
     }
 }
