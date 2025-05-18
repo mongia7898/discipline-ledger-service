@@ -1,4 +1,4 @@
-package com.mongia.discpline.ledger.DTOs;
+package com.mongia.discpline.ledger.DTOs.requests;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
