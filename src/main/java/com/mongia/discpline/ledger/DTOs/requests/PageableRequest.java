@@ -1,16 +1,15 @@
 package com.mongia.discpline.ledger.DTOs.requests;
 
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class PageableRequest {
 
 
-     Integer pageNo=1;
-     Integer size=10;
-     String sortBy;
+     private Integer pageNo=1;
+     private Integer size=10;
+     private String sortBy="id";
      // Can be -1-> descending or 1-> ascending;
-     int sortOrder;
+     private Boolean ascending=Boolean.FALSE;
 }
 

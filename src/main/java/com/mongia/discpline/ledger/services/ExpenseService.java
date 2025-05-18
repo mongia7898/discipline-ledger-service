@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -54,7 +55,8 @@ public class ExpenseService {
     }
     public ExpenseListResponse getAllExpenses(PageableRequest pageableRequest){
 
-        PageRequest pageRequest= PageRequest.of(pageableRequest.getPageNo(),pageableRequest.getSize());
+        Sort sort = pageableRequest.getAscending() ? Sort.by(pageableRequest.getSortBy()).ascending() : Sort.by(pageableRequest.getSortBy()).descending();
+        PageRequest pageRequest= PageRequest.of(pageableRequest.getPageNo(),pageableRequest.getSize(),sort);
          Page<Expenses> allExpenses=expenseRepository.findAll(pageRequest);
 //         Long totalAmount=
 
