@@ -1,9 +1,7 @@
 package com.mongia.discpline.ledger.Entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -11,6 +9,7 @@ import lombok.Data;
 @Table
 public class Habit {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String habitName;
