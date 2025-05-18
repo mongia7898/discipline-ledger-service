@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class ExpenseListResponse {
-    private Long totalAmount;
+    private Double totalAmount;
     private int totalPages;
     private int currentPage;
     private Long totalElements;

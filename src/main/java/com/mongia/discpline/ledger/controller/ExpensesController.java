@@ -29,7 +29,15 @@ public class ExpensesController extends ResponseMessages {
     }
 
     @PostMapping("/all")
-    public ResponseEntity<LedgerResponse<?>> getAllExpenses(@RequestBody PageableRequest pageableRequest){
+    public ResponseEntity<LedgerResponse<?>> getAllExpenses(@RequestHeader(defaultValue = "0",value = "pageNo")int pageNo,
+                                                            @RequestHeader(defaultValue = "10",value = "pageSize")int pageSize,
+                                                            @RequestHeader(defaultValue = "id",value = "sortBy")String sorBy,
+                                                            @RequestHeader(defaultValue = "true",value = "pageNo")Boolean ascending){
+        PageableRequest pageableRequest=new PageableRequest();
+        pageableRequest.setAscending(ascending);
+        pageableRequest.setSize(pageSize);
+        pageableRequest.setPageNo(pageNo);
+        pageableRequest.setSortBy(sorBy);
         ExpenseListResponse allExpenses = expenseService.getAllExpenses(pageableRequest);
         return ResponseEntity.ok(new LedgerResponse<ExpenseListResponse>(Boolean.TRUE,EXPENSE_CREATED,allExpenses));
     }
@@ -52,8 +60,17 @@ public class ExpensesController extends ResponseMessages {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchExpenses(@RequestBody ExpenseSearchRequest expenseSearch){
-        return ResponseEntity.ok(new LedgerResponse<ExpenseListResponse>(Boolean.TRUE,EXPENSE_UDPATED,expenseService.searchExpense(expenseSearch)));
+    public ResponseEntity<?> searchExpenses(@RequestHeader(defaultValue = "0",value = "pageNo")int pageNo,
+                                            @RequestHeader(defaultValue = "10",value = "pageSize")int pageSize,
+                                            @RequestHeader(defaultValue = "id",value = "sortBy")String sorBy,
+                                            @RequestHeader(defaultValue = "true",value = "pageNo")Boolean ascending,
+                                            @RequestBody ExpenseSearchRequest expenseSearch){
+        PageableRequest pageableRequest=new PageableRequest();
+        pageableRequest.setAscending(ascending);
+        pageableRequest.setSize(pageSize);
+        pageableRequest.setPageNo(pageNo);
+        pageableRequest.setSortBy(sorBy);
+        return ResponseEntity.ok(new LedgerResponse<ExpenseListResponse>(Boolean.TRUE,EXPENSE_UDPATED,expenseService.searchExpense(pageableRequest,expenseSearch)));
 
     }
 }
